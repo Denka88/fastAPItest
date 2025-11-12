@@ -1,12 +1,46 @@
+import json
+
 from models.pizza import Pizza
 
 class PizzaManager:
-    def __init__(self):
+    def __init__(self, path="data/pizzas.json"):
+        self.path = path
         self.pizzas = []
+        self._load()
+
+    def _load(self):
+        with open(self.path, 'r', encoding="utf-8") as file:
+            self.pizzas = [Pizza(**item) for item in json.load(file)]
+
+    def _save(self):
+        with open(self.path, 'w', encoding="utf-8") as file:
+            json.dump([pizza.dict() for pizza in self.pizzas], file, ensure_ascii=False, indent=4)
 
     def get_all(self):
         return self.pizzas
 
-    def add_pizza(self, pizza: Pizza) -> Pizza:
+    def add_pizza(self, pizza: Pizza) -> dict:
+        if self.pizzas:
+            new_id = self.pizzas[-1].id + 1
+        else:
+            new_id = 1
+        pizza.id = new_id
         self.pizzas.append(pizza)
-        return pizza
+        self._save()
+        return {
+            "message": "Пицца успешно добавлена",
+            "pizza": pizza
+        }
+
+    def edit_pizza(self, pizza_id: int, new_name: str, new_price:float) -> dict:
+        pizza_to_edit = next((pizza for pizza in self.pizzas if pizza.id == pizza_id), None)
+        if not pizza_to_edit:
+            return {"message": "Пицца с таким ID не найдена"}
+
+        pizza_to_edit.name = new_name
+        pizza_to_edit.price = new_price
+        self._save()
+        return {
+            "message": f"Пицца с идентификатором {pizza_to_edit.id} успешно обновлена",
+            "pizza": pizza_to_edit
+        }
