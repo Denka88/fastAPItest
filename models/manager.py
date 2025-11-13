@@ -9,8 +9,8 @@ class PizzaManager:
         self._load()
 
     def _load(self):
-        with open(self.path, 'r', encoding="utf-8") as file:
-            self.pizzas = [Pizza(**item) for item in json.load(file)]
+        with open(self.path, "r", encoding='utf-8') as f:
+            self.pizzas = [Pizza(**item) for item in json.load(f)]
 
     def _save(self):
         with open(self.path, 'w', encoding="utf-8") as file:
@@ -44,3 +44,12 @@ class PizzaManager:
             "message": f"Пицца с идентификатором {pizza_to_edit.id} успешно обновлена",
             "pizza": pizza_to_edit
         }
+
+    def delete_pizza(self, pizza_id: int) -> dict:
+        pizza_to_delete = next((pizza for pizza in self.pizzas if pizza.id == pizza_id), None)
+        if not pizza_to_delete:
+            return {"message": "Пицца с таким ID не найдена"}
+
+        self.pizzas.remove(pizza_to_delete)
+        self._save()
+        return {"message": f"Пицца с идентификатором {pizza_to_delete.id} успешно удалена"}
