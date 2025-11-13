@@ -1,9 +1,12 @@
 from fastapi import FastAPI
+from starlette.templating import Jinja2Templates
+
 from models.pizza import Pizza
 from models.manager import PizzaManager
 
 app = FastAPI()
 pizza_manager = PizzaManager()
+templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 def read_root():

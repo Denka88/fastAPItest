@@ -3,3 +3,4 @@ uvicorn
 pydantic
 aiosqlite
 sqlalchemy
+jinja2
