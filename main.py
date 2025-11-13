@@ -1,10 +1,12 @@
-from fastapi import FastAPI
-from starlette.templating import Jinja2Templates
+from fastapi import FastAPI, Request
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 from models.pizza import Pizza
 from models.manager import PizzaManager
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
 pizza_manager = PizzaManager()
 templates = Jinja2Templates(directory="templates")
 
@@ -13,8 +15,9 @@ def read_root():
     return {"message": "Добро пожаловать в мир пицц"}
 
 @app.get("/pizzas")
-def get_pizzas():
-    return pizza_manager.get_all()
+def get_pizzas(request: Request):
+    pizzas = pizza_manager.get_all()
+    return templates.TemplateResponse("index.html", {"request": request, "pizzas": pizzas})
 
 @app.post("/pizzas/add")
 def add_pizza(pizza: Pizza):

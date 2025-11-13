@@ -3,8 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Мир пицц от огузка</title>
+    <link rel="stylesheet" href="/static/style/style.min.css">
+    <link rel="icon" href="/static/images/icons/favicon.svg">
 </head>
 <body>
+<img src="/static/images/logo.svg" alt="Логотип" width="100px">
+<h1>Список пицц</h1>
 
+<ul>
+    {% for pizza in pizzas %}
+    <li>{{ pizza.name }} - {{ pizza.price }} рублей</li>
+    {% endfor %}
+</ul>
 </body>
 </html>
