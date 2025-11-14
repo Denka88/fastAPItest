@@ -7,3 +7,4 @@ class Pizza(BaseModel):
     id: Optional[int] = None
     name: str
     price: float
+    category_id: Optional[int] = None
