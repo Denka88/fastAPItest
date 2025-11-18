@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Изменение категории</title>
+</head>
+<body>
+<h1>Изменение категории {{ category.id }}.{{ category.name }}</h1>
+
+<form action="/categories/edit" method="post">
+    <input type="hidden" name="id" value="{{ category.id }}">
+    <label for="new_name">Новое название:</label><br>
+    <input type="text" name="new_name"><br>
+    <input type="submit" value="Обновить">
+</form>
+</body>
+</html>

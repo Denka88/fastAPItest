@@ -19,6 +19,14 @@ class CategoryManager:
     def get_all(self):
         return self.categories
 
+    def get_by_id(self, category_id: int) -> dict:
+        for category in self.categories:
+            if category.id == category_id:
+                return category
+        return {
+            "message": "Категория не найдена"
+        }
+
     def add_category(self, category: Category) -> dict:
         if self.categories:
             new_id = self.categories[-1].id + 1

@@ -67,9 +67,21 @@ def add_category(
     else:
         return result
 
+@app.get("/categories/edit/{category_id}")
+def get_categories(request: Request):
+    category = category_manager.get_by_id(category_id=request.query_params.get("category_id"))
+    return templates.TemplateResponse("edit_category.html", {"request": request, "categories": categories})
+
 @app.put("/categories/edit")
-def update_category(category: Category):
-    return category_manager.edit_category(category.id, category.name)
+def update_category(
+        id: Optional[int] = Form(...),
+        name: str = Form(...),
+):
+    edited_category = category_manager.edit_category(id, name)
+    if edited_category.get("message") == f"Категория с идентификатором {id} успешно обновлена":
+        return RedirectResponse(url="/categories", status_code=status.HTTP_303_SEE_OTHER)
+    else:
+        return edited_category
 
 @app.delete("/categories/delete/{delete_id}")
 def delete_category(delete_id: int):
