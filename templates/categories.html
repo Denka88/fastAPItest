@@ -5,18 +5,32 @@
     <title>Категории пицц</title>
 </head>
 <body>
-<h1>Список категроий</h1>
+<h1>Список категорий <a href="/pizzas">Перейти к пиццам</a></h1>
 
 <ul>
     {% for category in categories %}
-    <li>{{ category.name }} - <a href="/categories/edit/{{ category.id }}">Изменить</a></li>
+    <li style="display: flex;flex-direction: row;gap: 5px;">{{ category.name }} - <button onclick="editCategory('{{ category.id }}', '{{ category.name }}')">Изменить</button> - <form action="/categories/delete/{{ category.id }}" method="post"><input type="submit" value="Удалить"></form></li>
     {% endfor %}
 </ul>
-
+<h3>Добавление категории</h3>
 <form action="/categories/add" method="post">
     <label for="name">Название категории:</label><br>
     <input type="text" name="name"><br>
     <input type="submit" value="Добавить">
 </form>
+
+<h3>Редактирование категории</h3>
+<form id="edit_form" action="/categories/edit" method="post">
+    <input type="hidden" id="category_id" name="category_id">
+    <label for="new_name">Новое название категории:</label><br>
+    <input type="text" id="new_name" name="new_name"><br>
+    <input type="submit" value="Обновить">
+</form>
 </body>
+<script>
+function editCategory(id, name) {
+    document.getElementById('category_id').value = id;
+    document.getElementById('new_name').value = name;
+}
+</script>
 </html>

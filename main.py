@@ -42,14 +42,27 @@ def add_pizza(
     else:
         return result
 
-@app.put("/pizzas/edit")
-def update_pizza(pizza: Pizza):
+@app.post("/pizzas/edit")
+def update_pizza(
+        pizza_id: int =Form(...),
+        new_name: str = Form(...),
+        new_price: float = Form(...),
+        new_category_id: Optional[int] = Form(...),
+    ):
     categories = category_manager.get_all()
-    return pizza_manager.edit_pizza(pizza.id, pizza.name, pizza.price, pizza.category_id, categories)
+    result = pizza_manager.edit_pizza(pizza_id, new_name, new_price, new_category_id, categories)
+    if result.get("message") == f"Пицца с идентификатором {pizza_id} успешно обновлена":
+        return RedirectResponse(url="/pizzas", status_code=status.HTTP_303_SEE_OTHER)
+    else:
+        return result
 
-@app.delete("/pizzas/delete/{delete_id}")
+@app.post("/pizzas/delete/{delete_id}")
 def delete_pizza(delete_id: int):
-    return pizza_manager.delete_pizza(delete_id)
+    result = pizza_manager.delete_pizza(delete_id)
+    if result.get("message") == f"Пицца с идентификатором {delete_id} успешно удалена":
+        return RedirectResponse(url="/pizzas", status_code=status.HTTP_303_SEE_OTHER)
+    else:
+        return result
 
 @app.get("/categories")
 def get_categories(request: Request):
@@ -67,22 +80,22 @@ def add_category(
     else:
         return result
 
-@app.get("/categories/edit/{category_id}")
-def get_categories(request: Request):
-    category = category_manager.get_by_id(category_id=request.query_params.get("category_id"))
-    return templates.TemplateResponse("edit_category.html", {"request": request, "categories": categories})
-
-@app.put("/categories/edit")
+@app.post("/categories/edit")
 def update_category(
-        id: Optional[int] = Form(...),
-        name: str = Form(...),
+        category_id: Optional[int] = Form(...),
+        new_name: str = Form(...),
 ):
-    edited_category = category_manager.edit_category(id, name)
-    if edited_category.get("message") == f"Категория с идентификатором {id} успешно обновлена":
+    result = category_manager.edit_category(category_id, new_name)
+    print(result)
+    if result.get("message") == f"Категория с идентификатором {category_id} успешно обновлена":
         return RedirectResponse(url="/categories", status_code=status.HTTP_303_SEE_OTHER)
     else:
-        return edited_category
+        return result
 
-@app.delete("/categories/delete/{delete_id}")
+@app.post("/categories/delete/{delete_id}")
 def delete_category(delete_id: int):
-    return category_manager.delete_category(delete_id)
+    result = category_manager.delete_category(delete_id)
+    if result.get("message") == f"Категория с идентификатором {delete_id} успешно удалена":
+        return RedirectResponse(url="/categories", status_code=status.HTTP_303_SEE_OTHER)
+    else:
+        return result

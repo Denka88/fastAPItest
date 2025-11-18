@@ -7,14 +7,14 @@
     <link rel="icon" href="/static/images/icons/favicon.svg">
 </head>
 <body>
-<h1>Список пицц</h1>
+<h1>Список пицц <a href="/categories">Перейти к категориям</a></h1>
 
 <ul>
     {% for pizza in pizzas %}
-    <li>{{ pizza.name }} - {{ pizza.price }} рублей</li>
+    <li style="display: flex;flex-direction: row;gap: 5px;">{{ pizza.name }} - {{ pizza.price }} рублей - <button onclick="editPizza('{{ pizza.id }}', '{{ pizza.name }}', '{{ pizza.price }}', '{{ pizza.category_id }}')">Изменить</button> -<form action="/pizzas/delete/{{ pizza.id }}" method="post"><input type="submit" value="Удалить"></form></li>
     {% endfor %}
 </ul>
-
+<h3>Добавление пиццы</h3>
 <form action="/pizzas/add" method="post">
     <label for="name">Название пиццы:</label><br>
     <input type="text" name="name"><br>
@@ -28,5 +28,29 @@
     </select><br>
     <input type="submit" value="Добавить">
 </form>
+
+<h3>Редактирование пиццы</h3>
+<form id="edit_form" action="/pizzas/edit" method="post">
+    <input type="hidden" name="pizza_id" id="pizza_id">
+    <label for="new_name">Новое название пиццы:</label><br>
+    <input type="text" name="new_name" id="new_name"><br>
+    <label for="new_price">Новая цена пиццы:</label><br>
+    <input type="number" name="new_price" id="new_price"><br>
+    <label for="new_category_id">Новая категория:</label><br>
+    <select name="new_category_id" id="new_category_id">
+        {% for category in categories %}
+        <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+    </select><br>
+    <input type="submit" value="Обновить">
+</form>
 </body>
+<script>
+    function editPizza(id, name, price, category_id){
+        document.getElementById('pizza_id').value = id;
+        document.getElementById('new_name').value = name;
+        document.getElementById('new_price').value = price;
+        document.getElementById('new_category_id').value = category_id;
+    }
+</script>
 </html>
