@@ -20,6 +20,12 @@
     <input type="text" name="name"><br>
     <label for="price">Цена пиццы:</label><br>
     <input type="number" name="price"><br>
+    <label for="category_id">Категория:</label><br>
+    <select name="category_id">
+        {% for category in categories %}
+        <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+    </select><br>
     <input type="submit" value="Добавить">
 </form>
 </body>

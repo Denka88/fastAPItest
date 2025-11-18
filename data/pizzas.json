@@ -2,6 +2,55 @@
     {
         "id": 1,
         "name": "Банана с креветками",
-        "price": 1400.3
+        "price": 1400.3,
+        "category_id": null
+    },
+    {
+        "id": 2,
+        "name": "qwe",
+        "price": 123.0,
+        "category_id": 1
+    },
+    {
+        "id": 3,
+        "name": "qfqwf",
+        "price": 1233.0,
+        "category_id": 1
+    },
+    {
+        "id": 4,
+        "name": "qfqwf",
+        "price": 1233.0,
+        "category_id": 1
+    },
+    {
+        "id": 5,
+        "name": "qfqwf",
+        "price": 1233.0,
+        "category_id": 1
+    },
+    {
+        "id": 6,
+        "name": "qfqfq",
+        "price": 1234213.0,
+        "category_id": 1
+    },
+    {
+        "id": 7,
+        "name": "poerjkg",
+        "price": 3475389.0,
+        "category_id": 1
+    },
+    {
+        "id": 8,
+        "name": "ghjfgyner`",
+        "price": 25325.0,
+        "category_id": 1
+    },
+    {
+        "id": 9,
+        "name": "qgqdf",
+        "price": 1313.0,
+        "category_id": 3
     }
 ]

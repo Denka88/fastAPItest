@@ -1,8 +1,11 @@
+from typing import Optional
 from urllib import request
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from starlette import status
+from starlette.responses import RedirectResponse
 
 from models.category import Category
 from models.categoty_manager import CategoryManager
@@ -22,12 +25,22 @@ def read_root():
 @app.get("/pizzas")
 def get_pizzas(request: Request):
     pizzas = pizza_manager.get_all()
-    return templates.TemplateResponse("index.html", {"request": request, "pizzas": pizzas})
+    categories = category_manager.get_all()
+    return templates.TemplateResponse("index.html", {"request": request, "pizzas": pizzas, "categories": categories})
 
 @app.post("/pizzas/add")
-def add_pizza(pizza: Pizza):
+def add_pizza(
+        name: str = Form(...),
+        price: float = Form(...),
+        category_id: Optional[int] = Form(...),
+):
     categories = category_manager.get_all()
-    return pizza_manager.add_pizza(pizza, categories)
+    pizza = Pizza(name=name, price=price, category_id=category_id)
+    result = pizza_manager.add_pizza(pizza, categories)
+    if result.get("message") == "Пицца успешно добавлена":
+        return RedirectResponse(url="/pizzas", status_code=status.HTTP_303_SEE_OTHER)
+    else:
+        return result
 
 @app.put("/pizzas/edit")
 def update_pizza(pizza: Pizza):
@@ -39,12 +52,20 @@ def delete_pizza(delete_id: int):
     return pizza_manager.delete_pizza(delete_id)
 
 @app.get("/categories")
-def get_categories():
-    return category_manager.get_all()
+def get_categories(request: Request):
+    categories = category_manager.get_all()
+    return templates.TemplateResponse("categories.html", {"request": request, "categories": categories})
 
 @app.post("/categories/add")
-def add_category(category: Category):
-    return category_manager.add_category(category)
+def add_category(
+        name: str = Form(...),
+):
+    category = Category(name=name)
+    result = category_manager.add_category(category)
+    if result.get("message") == "Категория успешно добавлена":
+        return RedirectResponse(url="/categories", status_code=status.HTTP_303_SEE_OTHER)
+    else:
+        return result
 
 @app.put("/categories/edit")
 def update_category(category: Category):

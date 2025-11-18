@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Категории пицц</title>
+</head>
+<body>
+<h1>Список категроий</h1>
+
+<ul>
+    {% for category in categories %}
+    <li>{{ category.name }}</li>
+    {% endfor %}
+</ul>
+
+<form action="/categories/add" method="post">
+    <label for="name">Название категории:</label><br>
+    <input type="text" name="name"><br>
+    <input type="submit" value="Добавить">
+</form>
+</body>
+</html>
