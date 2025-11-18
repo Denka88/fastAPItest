@@ -14,5 +14,13 @@
     <li>{{ pizza.name }} - {{ pizza.price }} рублей</li>
     {% endfor %}
 </ul>
+
+<form action="/pizzas/add" method="post">
+    <label for="name">Название пиццы:</label><br>
+    <input type="text" name="name"><br>
+    <label for="price">Цена пиццы:</label><br>
+    <input type="number" name="price"><br>
+    <input type="submit" value="Добавить">
+</form>
 </body>
 </html>
