@@ -9,7 +9,15 @@
 
 <ul>
     {% for category in categories %}
-    <li style="display: flex;flex-direction: row;gap: 5px;">{{ category.name }} - <button onclick="editCategory('{{ category.id }}', '{{ category.name }}')">Изменить</button> - <form action="/categories/delete/{{ category.id }}" method="post"><input type="submit" value="Удалить"></form></li>
+    <li id="category-{{ category.id }}" style="display: flex;flex-direction: row;gap: 5px;">{{ category.name }} -
+        <button onclick="printInForm('{{ category.id }}', '{{ category.name }}')">
+            Изменить
+        </button>
+        -
+        <button onclick="deleteCategory({{ category.id }})" type="button">
+            Удалить категорию
+        </button>
+    </li>
     {% endfor %}
 </ul>
 <h3>Добавление категории</h3>
@@ -20,17 +28,51 @@
 </form>
 
 <h3>Редактирование категории</h3>
-<form id="edit_form" action="/categories/edit" method="post">
+<form id="edit_form">
     <input type="hidden" id="category_id" name="category_id">
     <label for="new_name">Новое название категории:</label><br>
     <input type="text" id="new_name" name="new_name"><br>
-    <input type="submit" value="Обновить">
+    <button type="button" onclick="updateCategory()">Обновить</button>
 </form>
 </body>
 <script>
-function editCategory(id, name) {
+function printInForm(id, name) {
     document.getElementById('category_id').value = id;
     document.getElementById('new_name').value = name;
+}
+
+function updateCategory(){
+    const categoryId = document.getElementById('category_id').value;
+    const newName = document.getElementById('new_name').value;
+
+    const formData = new FormData();
+    formData.append('category_id', categoryId);
+    formData.append('new_name', newName);
+
+    fetch('/categories/edit', {
+        method: 'PUT',
+        body: formData
+    }).then(res => {
+        if(res.ok){
+            location.reload()
+        } else {
+            alert('Ошибка при обновлении')
+        }
+    })
+}
+
+function deleteCategory(id){
+    if (!confirm("Вы точно хотите удалить категорию?")) return;
+
+    fetch(`/categories/delete/${id}`, {
+        method: 'DELETE'
+    }).then(res => {
+        if(res.ok){
+            document.getElementById(`category-${id}`).remove()
+        } else {
+            alert('Ошибка при удалении')
+        }
+    })
 }
 </script>
 </html>

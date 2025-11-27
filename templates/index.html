@@ -10,10 +10,19 @@
 <h1>Список пицц <a href="/categories">Перейти к категориям</a></h1>
 
 <ul>
-    {% for pizza in pizzas %}
-    <li style="display: flex;flex-direction: row;gap: 5px;">{{ pizza.name }} - {{ pizza.price }} рублей - <button onclick="editPizza('{{ pizza.id }}', '{{ pizza.name }}', '{{ pizza.price }}', '{{ pizza.category_id }}')">Изменить</button> -<form action="/pizzas/delete/{{ pizza.id }}" method="post"><input type="submit" value="Удалить"></form></li>
-    {% endfor %}
+  {% for pizza in pizzas %}
+    <li id="pizza-{{ pizza.id }}" style="display: flex;flex-direction: row;gap: 5px;">{{ pizza.name }} - {{ pizza.price }} рублей -
+      <button onclick="printInForm('{{ pizza.id }}', '{{ pizza.name }}', '{{ pizza.price }}', '{{ pizza.category_id }}')">
+        Изменить
+      </button>
+      -
+      <button onclick="deletePizza({{ pizza.id }})" type="button">
+        Удалить пиццу
+      </button>
+    </li>
+  {% endfor %}
 </ul>
+
 <h3>Добавление пиццы</h3>
 <form action="/pizzas/add" method="post">
     <label for="name">Название пиццы:</label><br>
@@ -30,7 +39,7 @@
 </form>
 
 <h3>Редактирование пиццы</h3>
-<form id="edit_form" action="/pizzas/edit" method="post">
+<form id="edit_form">
     <input type="hidden" name="pizza_id" id="pizza_id">
     <label for="new_name">Новое название пиццы:</label><br>
     <input type="text" name="new_name" id="new_name"><br>
@@ -42,15 +51,53 @@
         <option value="{{ category.id }}">{{ category.name }}</option>
         {% endfor %}
     </select><br>
-    <input type="submit" value="Обновить">
+    <button type="button" onclick="updatePizza()">Обновить</button>
 </form>
 </body>
 <script>
-    function editPizza(id, name, price, category_id){
+    function printInForm(id, name, price, category_id){
         document.getElementById('pizza_id').value = id;
         document.getElementById('new_name').value = name;
         document.getElementById('new_price').value = price;
         document.getElementById('new_category_id').value = category_id;
+    }
+
+    function updatePizza() {
+        const pizzaId = document.getElementById('pizza_id').value;
+        const newName = document.getElementById('new_name').value;
+        const newPrice = document.getElementById('new_price').value;
+        const newCategoryId = document.getElementById('new_category_id').value;
+
+        const formData = new FormData();
+        formData.append('pizza_id', pizzaId);
+        formData.append('new_name', newName);
+        formData.append('new_price', newPrice);
+        formData.append('new_category_id', newCategoryId);
+
+        fetch('/pizzas/edit', {
+            method: 'PUT',
+            body: formData
+        }).then(res => {
+            if(res.ok){
+                location.reload()
+            } else {
+                alert('Ошибка при обновлении')
+            }
+        })
+    }
+
+    function deletePizza(id) {
+        if (!confirm("Вы точно хотите удалить пиццу?")) return;
+
+        fetch(`/pizzas/delete/${id}`, {
+            method: 'DELETE'
+        }).then(res => {
+            if(res.ok){
+                document.getElementById(`pizza-${id}`).remove()
+            } else {
+                alert('Ошибка при удалении')
+            }
+        })
     }
 </script>
 </html>

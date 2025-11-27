@@ -42,7 +42,7 @@ def add_pizza(
     else:
         return result
 
-@app.post("/pizzas/edit")
+@app.put("/pizzas/edit")
 def update_pizza(
         pizza_id: int =Form(...),
         new_name: str = Form(...),
@@ -51,18 +51,12 @@ def update_pizza(
     ):
     categories = category_manager.get_all()
     result = pizza_manager.edit_pizza(pizza_id, new_name, new_price, new_category_id, categories)
-    if result.get("message") == f"Пицца с идентификатором {pizza_id} успешно обновлена":
-        return RedirectResponse(url="/pizzas", status_code=status.HTTP_303_SEE_OTHER)
-    else:
-        return result
+    return {"success": result.get("message")}
 
-@app.post("/pizzas/delete/{delete_id}")
-def delete_pizza(delete_id: int):
+@app.delete("/pizzas/delete/{delete_id}")
+def delete_pizza_form(delete_id: int):
     result = pizza_manager.delete_pizza(delete_id)
-    if result.get("message") == f"Пицца с идентификатором {delete_id} успешно удалена":
-        return RedirectResponse(url="/pizzas", status_code=status.HTTP_303_SEE_OTHER)
-    else:
-        return result
+    return {"success": result.get("message")}
 
 @app.get("/categories")
 def get_categories(request: Request):
@@ -80,22 +74,15 @@ def add_category(
     else:
         return result
 
-@app.post("/categories/edit")
+@app.put("/categories/edit")
 def update_category(
         category_id: Optional[int] = Form(...),
         new_name: str = Form(...),
 ):
     result = category_manager.edit_category(category_id, new_name)
-    print(result)
-    if result.get("message") == f"Категория с идентификатором {category_id} успешно обновлена":
-        return RedirectResponse(url="/categories", status_code=status.HTTP_303_SEE_OTHER)
-    else:
-        return result
+    return {"success": result.get("message")}
 
-@app.post("/categories/delete/{delete_id}")
+@app.delete("/categories/delete/{delete_id}")
 def delete_category(delete_id: int):
     result = category_manager.delete_category(delete_id)
-    if result.get("message") == f"Категория с идентификатором {delete_id} успешно удалена":
-        return RedirectResponse(url="/categories", status_code=status.HTTP_303_SEE_OTHER)
-    else:
-        return result
+    return {"success": result.get("message")}

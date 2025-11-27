@@ -1,9 +1,9 @@
 [
     {
         "id": 1,
-        "name": "Банана с креветками",
+        "name": "Банана с fdsfsdи",
         "price": 1400.3,
-        "category_id": null
+        "category_id": 2
     },
     {
         "id": 2,
@@ -25,26 +25,8 @@
     },
     {
         "id": 5,
-        "name": "qfqwf",
-        "price": 1233.0,
+        "name": "qfqwfвфasdas",
+        "price": 1232.0,
         "category_id": 1
-    },
-    {
-        "id": 6,
-        "name": "qfqfq",
-        "price": 1234213.0,
-        "category_id": 1
-    },
-    {
-        "id": 7,
-        "name": "poerjkg",
-        "price": 3475389.0,
-        "category_id": 1
-    },
-    {
-        "id": 8,
-        "name": "ghjfпукпу",
-        "price": 234.0,
-        "category_id": 2
     }
 ]
